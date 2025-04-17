@@ -1,0 +1,23 @@
+;; Desactivar la barra de menú
+(menu-bar-mode -1)
+
+;; Desactivar la barra de herramientas
+(tool-bar-mode -1)
+
+;; Desactivar la barra de desplazamiento
+(scroll-bar-mode -1)
+
+;; Activar el resaltado de sintaxis
+(global-font-lock-mode t)
+
+;; Barra de Tutorial de emacs
+(setq inhibit-startup-screen t)
+
+;; Activar el resaltado de líneas activas
+(global-hl-line-mode t)
+
+;; Mostrar números de línea
+(global-display-line-numbers-mode)
+
+;; Mostrar número de columna
+(column-number-mode t)

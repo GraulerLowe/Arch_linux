@@ -1,0 +1,1 @@
+("~/Documentos/Ciencias de la Computacion/4 semestre/Lenguajes de Programacion/Practica1-Lenguajes/" "~/Documentos/Ciencias de la Computacion/3 semestre/Modelado Y Programacion/Music-database/" "~/Descargas/Arco-Linux/")
