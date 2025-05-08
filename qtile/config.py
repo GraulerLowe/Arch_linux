@@ -63,7 +63,7 @@ from qtile_extras.popup.toolkit import (
 def show_power_menu(qtile):
     controls = [
         PopupImage(
-            filename="~/Imágenes/logout.png",
+            filename="~/.config/qtile/qtile_images/logout.png",
             pos_x=0.05,
             pos_y=0.1,
             width=0.2,
@@ -73,7 +73,7 @@ def show_power_menu(qtile):
             }
         ),
         PopupImage(
-            filename="~/Imágenes/bel.png",
+            filename="~/.config/qtile/qtile_images/bel.png",
             pos_x=0.3,
             pos_y=0.1,
             width=0.2,
@@ -83,7 +83,7 @@ def show_power_menu(qtile):
             }
         ),
         PopupImage(
-            filename="~/Imágenes/sleep.png",
+            filename="~/.config/qtile/qtile_images/sleep.png",
             pos_x=0.55,
             pos_y=0.1,
             width=0.2,
@@ -93,7 +93,7 @@ def show_power_menu(qtile):
             }
         ),
         PopupImage(
-            filename="~/Imágenes/off.png",
+            filename="~/.config/qtile/qtile_images/off.png",
             pos_x=0.8,
             pos_y=0.1,
             width=0.2,
@@ -206,6 +206,7 @@ keys = [
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod], "l", lazy.spawn("betterlockscreen -l"), desc="Bloquear pantalla"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Focus windows
     Key([mod], "Left", lazy.layout.left(), desc="Move focus to the left"),
@@ -224,7 +225,7 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn("wezterm"), desc="Launch terminal"),
     Key([mod],"w", lazy.spawn("zen-browser"), desc='browser'),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -332,7 +333,7 @@ screens = [
                                     #background='#282738',
                                 ),
                 widget.Image(
-                              filename='~/Descargas/Arch Linux.png',
+                              filename='~/Imágenes/Arch-linux-logo-1602415784.png',
                               margin=3,
                               mouse_callbacks={
                                     'Button1': lambda: qtile.cmd_spawn('rofi -show drun -show-icons -b')
@@ -364,7 +365,7 @@ screens = [
                     volume_up_command="amixer set Master 5%+",
                     volume_down_command="amixer set Master 5%-",
                     fmt='󰎈 {}',
-                    foreground="#00f3ff",
+                    foreground="#33ceff",
                     font="JetBrainsMono Nerd Font Bold",
                     fontsize=12,
                 ),
@@ -373,11 +374,11 @@ screens = [
 		text="󰍛",
 		font="Font Awesome 6 Free Solid",
                 fontsize=18,
-                foreground="#00f3ff",
+                foreground="#33ceff",
 		),
                 widget.CPU(
 		    format="{load_percent}%",
-		    foreground="#00f3ff",
+		    foreground="#33ceff",
 		    font="JetBrainsMono Nerd Font Bold",
                     fontsize=12,
 		    ),
@@ -388,7 +389,7 @@ screens = [
 		),
                 widget.Memory(
 		    format=" {MemPercent}%",
-		    foreground="#00f3ff",
+		    foreground="#33ceff",
 		    font="JetBrainsMono Nerd Font Bold",
                     fontsize=13,
 		),
@@ -401,7 +402,7 @@ screens = [
                     font = "Iosevka Nerd Font",
                     fontsize = 15,
                     text = " ",
-                    foreground = "#00f3ff",
+                    foreground = "#33ceff",
         ),
         widget.Wlan(
                         interface="wlan0",
@@ -420,7 +421,7 @@ screens = [
                     font="Font Awesome 6 Free Solid",
                     fontsize=12,
                     mouse_callbacks={
-                    'Button1': lazy.spawn('/usr/bin/sh /home/graulerlowe/.config/qtile/scripts/popup_calendar.sh --popup')
+                    'Button1': lazy.spawn('/usr/bin/sh /home/grauler/.config/qtile/scripts/popup_calendar.sh --popup')
                     },
                 ),
                 widget.Clock(
@@ -428,7 +429,7 @@ screens = [
                     font="JetBrainsMono Nerd Font Bold",
                     fontsize=12,
                 mouse_callbacks={
-                    'Button1': lazy.spawn('/usr/bin/sh /home/graulerlowe/.config/qtile/scripts/popup_calendar.sh --popup')
+                    'Button1': lazy.spawn('/usr/bin/sh /home/grauler/.config/qtile/scripts/popup_calendar.sh --popup')
                 },
 
                 ),
@@ -439,7 +440,7 @@ screens = [
                 fontsize=13,
                 ),
                 widget.TextBox(
-                                    text="",
+                                    text=" ",
                                     font="Font Awesome 6 Free Solid",
                                     fontsize=18,
                                 ),
