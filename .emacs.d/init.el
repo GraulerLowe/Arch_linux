@@ -1,161 +1,143 @@
-;; ===============================
-;; Optimización de arranque
-;; ===============================
+;;===============================
+;;Configuración de emacs
+;;===============================
 
-;; Aumentar GC durante el inicio
+
+;; ===============================
+;; 1. Optimización de arranque
+;; ===============================
 (setq gc-cons-threshold (* 50 1000 1000))
 
-;; Restaurar GC normal después de iniciar
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold (* 2 1000 1000))))
 
-;;; Desactivar la barra de menú
+;; ===============================
+;; 2. Configuración de Paquetes (Idempotencia)
+;; ===============================
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+
+;; Instalar use-package si no existe
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(require 'use-package)
+;; Forzar que todos los paquetes se instalen automáticamente
+(setq use-package-always-ensure t)
+
+;; ===============================
+;; 3. Interfaz y UI
+;; ===============================
 (menu-bar-mode -1)
-
-;; Desactivar la barra de herramientas
 (tool-bar-mode -1)
-
-;; Desactivar la barra de desplazamiento
 (scroll-bar-mode -1)
-
-;; Activar el resaltado de sintaxis
 (global-font-lock-mode t)
-
-;; Barra de Tutorial de emacs
 (setq inhibit-startup-screen t)
-
-;; Activar el resaltado de líneas activas
 (global-hl-line-mode t)
-
-;; Mostrar números de línea
 (global-display-line-numbers-mode)
-
-;; Mostrar número de columna
 (column-number-mode t)
-
-;; Mostrar corchetes coincidentes
 (show-paren-mode t)
-
-;; Utilizar espacios en lugar de tabuladores
 (setq-default indent-tabs-mode nil)
-
-;; Definir el ancho de tabulación
 (setq-default tab-width 4)
-
-;; Desactivar los archivos de respaldo
 (setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq ring-bell-function 'ignore)
 
-;; ===============================
 ;; Scrolling fluido
-;; ===============================
 (setq scroll-margin 5
       scroll-conservatively 101
       scroll-step 1
       fast-but-imprecise-scrolling t)
 
-;; Desactivar los archivos de autoguardado
-(setq auto-save-default nil)
+;; Transparencia (Hyprland)
+;;(set-frame-parameter nil 'alpha-background 90)
+;;(add-to-list 'default-frame-alist '(alpha-background . 90))
 
-;; Desactivar el sonido de advertencia
-(setq ring-bell-function 'ignore)
-
-;; Cambiar el color de fondo
-;;(set-face-background 'default "#011220")
-;;(set-face-background 'fringe "#011220")
-;(set-face-background 'mode-line "#011220")
-;;(set-face-background 'mode-line-inactive "#011220")
-;(set-face-background 'minibuffer-prompt "#011220")
-
-;; Cambiar el color de fondo de las líneas de número
-;(set-face-background 'line-number "#011220")
-;(set-face-background 'line-number-current-line "#011220")
-
-;; Ajustar el tamaño de la fuente
-
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")))
-
-;(load-theme 'catppuccin t)
-(load-theme 'almost-mono-black t)
-;;(setq doom-theme 'catppuccin)
-;(setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mo>
-;;(catppuccin-reload)
-
-;; Habilitar el auto-completado
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-
-;; Configurar el atajo de teclado para abrir el archivo de confi>
-(global-set-key (kbd "C-c C-c") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+;; ===============================
+;; 4. Paquetes Visuales y Temas
+;; ===============================
+(use-package doom-themes
+  :config
+  (load-theme 'doom-xcode t))
 
 (use-package doom-modeline
-  :ensure t
   :init (doom-modeline-mode 1))
+
+(use-package nyan-mode
+  :config (nyan-mode 1))
+
+(use-package all-the-icons)
+
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner "/home/grauler/Imágenes/meiko_solanin.jpg")
+  (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
+
+;; ===============================
+;; 5. Herramientas de Desarrollo 
+;; ===============================
+
+;; Auto-completado global
+(use-package company
+  :config
+  (global-company-mode t))
+
+;; C++ y LSP 
+(use-package lsp-mode
+  :hook ((c++-mode . lsp)
+         (c-mode . lsp)
+         (rust-mode . lsp))
+  :commands lsp
+  :config
+  (setq lsp-idle-delay 0.1))
+
+(use-package lsp-ui :commands lsp-ui-mode)
+(setq dired-listing-switches "-alh")
+;; Manejo de proyectos
+(use-package projectile
+  :config (projectile-mode +1))
+
+(use-package magit
+  :bind (("C-x g" . magit-status)))
+(with-eval-after-load 'magit-mode
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(use-package yasnippet
+  :config (yas-global-mode 1))
+
+;; Terminal integrada
+(use-package vterm)
+
+;; Explorador de archivos
+(use-package treemacs
+  :bind ([f8] . treemacs))
+
+;; ===============================
+;; 6. Atajos de teclado y fuentes
+;; ===============================
+(global-set-key (kbd "C-c C-c") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "C-c t") 'vterm)
+
+;; Configuración de fuente (Ajusta el nombre si no tienes Ubuntu Mono)
+(set-face-attribute 'default nil :family "Ubuntu Mono" :height 120)
+(add-to-list 'default-frame-alist '(font . "Ubuntu Mono-12"))
 
 (use-package ivy
   :ensure t
   :config
   (ivy-mode 1))
 
-;; Manejo de proyectos
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1))
-
-(use-package yasnippet
-  :ensure t
-  :config (yas-global-mode 1))
-
-(add-to-list 'load-path "~/.emacs.d/nyan-mode")
-(require 'nyan-mode)
-(nyan-mode 1)
-
-(use-package magit
-  :ensure t
-  :bind (("C-x g" . magit-status)))
-
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-
-(use-package all-the-icons
-  :ensure t)
-
-(with-eval-after-load 'almost-mono-black
-  (set-face-attribute 'default nil
-                      :family "Noto Sans Mono"
-                      :height 115
-                      :weight 'normal))
-
-;; Para nuevos frames (emacsclient -c, etc.)
-(add-to-list 'default-frame-alist
-             '(font . "Noto Sans Mono-11"))
-
-;; Atajo de teclado para abrir una terminal
-(global-set-key (kbd "C-c t") 'vterm)
-
-(global-set-key [f8] #'treemacs)
-;;Dashboard
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-(setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
-(setq dashboard-startup-banner "/home/grauler/Imágenes/Solani.jpeg")
-
-
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-
-(set-frame-parameter nil 'alpha-background 90)
-(add-to-list 'default-frame-alist '(alpha-background . 90))
-
-(add-to-list 'load-path "/path/to/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-
+;; ===============================
+;; 7. Custom-set (Generado por Emacs)
+;; ===============================
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -163,20 +145,14 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("4780d7ce6e5491e2c1190082f7fe0f812707fc77455616ab6f8b38e796cbffa9"
-     "1a6d120936f9df3f44953124dbf9e56b399e021702ca7d1844e6c5e1658b692b"
      default))
+ '(ein:jupyter-server-use-subcommand "server")
  '(package-selected-packages
-   '(all-the-icons all-the-icons-completion all-the-icons-ibuffer
-                   all-the-icons-nerd-fonts almost-mono-themes
-                   auto-complete catppuccin-theme clang-capf company
-                   dashboard doom-modeline doom-themes exotica-theme
-                   go go-add-tags go-autocomplete go-mode
-                   haskell-emacs haskell-emacs-base haskell-emacs-text
-                   haskell-mode lsp-mode magit material-theme
-                   minimal-theme night-owl-theme nix-mode nyan-mode
-                   org-dashboard racket-mode ring-mode rust-mode
-                   tao-theme treemacs treemacs-all-the-icons
-                   treemacs-nerd-icons vterm)))
+   '(cargo-mode company creamsody-theme dashboard django-mode
+                doom-modeline doom-themes easy-theme-preview ein
+                exec-path-from-shell flycheck flycheck-rust ivy
+                javap-mode lsp-java lsp-mode magit nyan-mode org
+                rust-mode treemacs vterm yuck-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
